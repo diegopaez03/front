@@ -4,10 +4,12 @@ import Link from "next/link";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import Logged from "@/components/ProfileMenu";
 import NotLogged from "@/components/LoginMenu";
+import getUser from "@/utils/getUser";
 
-const IsLogged = false;
+const IsLogged = typeof window !== 'undefined' && Boolean(localStorage.getItem('token')); //Aqui simplemente es para saber si se esta logueado o no, se puede copiar y pegar
 
 const Navbar = () => {
+  const user = getUser();
   return (
     <Box
       sx={{
@@ -32,7 +34,7 @@ const Navbar = () => {
       <Box>
         <Grid container alignItems="center" spacing={2}>
           <Grid item>
-            <Link href="/creation">
+            <Link href={"/creations/all/" + user}>
               <Button variant="text">
                 <Typography color="text.secondary" fontWeight={600}>
                   Creations
@@ -41,7 +43,7 @@ const Navbar = () => {
             </Link>
           </Grid>
           <Grid item>
-            <Link href="/creation/newcreation">
+            <Link href="/creations/newcreation">
               <Button variant="text">
                 <Typography color="text.secondary" fontWeight={600}>
                   New Creation

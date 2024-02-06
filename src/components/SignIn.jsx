@@ -10,15 +10,34 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export default function SignIn() {
-  const handleSubmit = (event) => {
+  const [errorMessage, setErrorMessage] = React.useState("");
+  const router = useRouter();
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    try {
+      const response = await axios.post("http://localhost:4000/auth/login", {
+        username: data.get("username"),
+        password: data.get("password"),
+      });
+      if (response.data.message) {
+        setErrorMessage(response.data.message);
+      }
+      if (response.data.loggedIn) {
+        localStorage.setItem("token", response.data.token);
+        router.push("/");
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
+      console.log(response);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -61,6 +80,9 @@ export default function SignIn() {
                 id="password"
                 autoComplete="current-password"
               />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="caption" color={"error"}>{errorMessage}</Typography>
             </Grid>
           </Grid>
           <Button

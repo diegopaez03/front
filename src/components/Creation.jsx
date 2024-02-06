@@ -80,7 +80,7 @@ const Creation = ({ creation }) => {
           {creation.encrypted ? "Encrypted" : "Unencrypted"}
         </Button>
       </Typography>
-      <Box fullWidth >
+      <Box >
       <Button
         variant="outlined"
         fullWidth

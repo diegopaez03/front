@@ -5,21 +5,27 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Tooltip from "@mui/material/Tooltip";
+import { useRouter } from "next/navigation";
 
 const LoginMenu = () => {
+  const router = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
-    console.log("Button clicked");
     setAnchorEl(event.currentTarget);
+  };
+
+  const handleLogin = () => {
+    router.push("/join/login");
+    handleClose();
   };
 
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    // Lógica para cerrar sesión
+  const handleSignUp = () => {
+    router.push("/join/signup");
     handleClose();
   };
 
@@ -42,8 +48,8 @@ const LoginMenu = () => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose}>Login</MenuItem>
-        <MenuItem onClick={handleLogout}>Sign Up</MenuItem>
+        <MenuItem onClick={handleLogin}>Login</MenuItem>
+        <MenuItem onClick={handleSignUp}>Sign Up</MenuItem>
       </Menu>
     </>
   );

@@ -6,7 +6,7 @@ async function fetchCreations() {
   return data;
 }
 
-async function CreationPage() {
+async function CreationsPage() {
   const creations = await fetchCreations();
   return (
     <>
@@ -15,4 +15,4 @@ async function CreationPage() {
   );
 }
 
-export default CreationPage;
+export default CreationsPage;

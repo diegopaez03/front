@@ -5,22 +5,32 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Tooltip from "@mui/material/Tooltip";
+import { useRouter } from "next/navigation";
+
 
 const AccountCircleButton = () => {
+  const router = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
-    console.log("Button clicked");
     setAnchorEl(event.currentTarget);
   };
+
+  const handleSeeProfile = () => {
+    router.push("/profile")
+  }
 
   const handleClose = () => {
     setAnchorEl(null);
   };
 
   const handleLogout = () => {
-    // Lógica para cerrar sesión
-    handleClose();
+    localStorage.removeItem('token');
+    router.push("/");
+    setAnchorEl(null);
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   };
 
   return (
@@ -42,7 +52,7 @@ const AccountCircleButton = () => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose}>Ver Perfil</MenuItem>
+        <MenuItem onClick={handleSeeProfile}>See profile</MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </>

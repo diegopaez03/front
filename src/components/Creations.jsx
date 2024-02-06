@@ -1,7 +1,14 @@
 "use client";
 import { Card, CardContent, Typography } from "@mui/material";
+import { useRouter } from "next/navigation";
+
+const IsLogged = typeof window !== 'undefined' && Boolean(localStorage.getItem('token')); 
 
 function Creations({ creations }) {
+  const router = useRouter();
+  if (!IsLogged){
+    router.push("/join/login")
+  }
   return (
     <div>
       {creations.map((creation) => (
