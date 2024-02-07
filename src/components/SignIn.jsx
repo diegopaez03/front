@@ -12,8 +12,10 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { homeRedirect } from "@/utils/redirect";
 
 export default function SignIn() {
+  homeRedirect();
   const [errorMessage, setErrorMessage] = React.useState("");
   const router = useRouter();
   const handleSubmit = async (event) => {
@@ -34,7 +36,6 @@ export default function SignIn() {
           window.location.reload();
         }, 1000);
       }
-      console.log(response);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -95,7 +96,7 @@ export default function SignIn() {
           </Button>
           <Grid container>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/join/signup" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>

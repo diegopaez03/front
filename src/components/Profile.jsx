@@ -2,9 +2,10 @@
 import { Box, Grid, Typography } from "@mui/material";
 import UserAvatar from "@/components/UserAvatar";
 import getUser from "@/utils/getUser";
+import loginRedirect from "@/utils/redirect";
 
 const Profile = () => {
-    
+    loginRedirect();
     return(
         <>
         <Box sx={{ textAlign: 'center', mt: 5 }}>

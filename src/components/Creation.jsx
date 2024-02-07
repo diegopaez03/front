@@ -9,6 +9,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  TextField,
+  Switch,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -16,9 +18,24 @@ import DeleteIcon from "@mui/icons-material/Delete";
 const Creation = ({ creation }) => {
   const [editable, setEditable] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [name, setName] = useState(creation.creationName);
+  const [description, setDescription] = useState(creation.creationDescription);
+  const [encrypted, setEncrypted] = useState(creation.encrypted);
 
   const handleEditClick = () => {
     setEditable(true);
+  };
+
+  const handleCancelEdit = () => {
+    setName(creation.creationName);
+    setDescription(creation.creationDescription);
+    setEncrypted(creation.encrypted);
+    setEditable(false);
+  };
+
+  const handleSave = () => {
+    // Aquí puedes implementar la lógica para guardar los cambios utilizando una petición PATCH con axios
+    setEditable(false);
   };
 
   const handleConfirmDelete = () => {
@@ -31,75 +48,116 @@ const Creation = ({ creation }) => {
   };
 
   return (
-    <Box
-      sx={{
-        p: 2,
-        border: 1,
-        borderColor: "primary.main",
-        borderRadius: 1,
-        textAlign: "center",
-      }}
-    >
+    <>
       <Box
         sx={{
-          backgroundColor: "primary.main",
-          p: 1,
-          mb: 1,
-          borderRadius: 2,
+          p: 2,
+          border: 1,
+          borderColor: "primary.main",
+          borderRadius: 1,
+          textAlign: "center",
         }}
       >
-        <Typography variant="h6" color="text.secondary">
-          {creation.creationName}
-        </Typography>
-      </Box>
-      <Typography variant="body1">
-        Description: {creation.creationDescription}
-      </Typography>
-      <Box
-        sx={{
-          backgroundColor: "primary.main",
-          p: 1,
-          mt: 2,
-          mb: 2,
-          borderRadius: 2,
-        }}
-      >
-        <Typography variant="body1" color="text.secondary">
-          Key Code
-        </Typography>
-        <Typography variant="body1" fontSize="1.6rem" color="text.secondary">
-          {creation.keyCode}
-        </Typography>
-      </Box>
-      <Typography variant="body1" color="text.primary">
-        {" "}
-        <Button
-          variant="contained"
-          color={creation.encrypted ? "success" : "error"}
+        <Box
+          sx={{
+            backgroundColor: "primary.main",
+            p: 1,
+            mb: 1,
+            borderRadius: 2,
+          }}
         >
-          {creation.encrypted ? "Encrypted" : "Unencrypted"}
-        </Button>
-      </Typography>
-      <Box >
-      <Button
-        variant="outlined"
-        fullWidth
-        startIcon={<EditIcon />}
-        onClick={handleEditClick}
-        disabled={editable}
-        sx={{ mt: 2, mb: 1 }}
-        >
-        Edit
-      </Button>
-      <Button
-        variant="outlined"
-        fullWidth
-        onClick={() => setShowConfirmDialog(true)}
-        startIcon={<DeleteIcon />}
-        >
-        Delete
-      </Button>
+          <Typography variant="h5" color="text.secondary">
+            {editable ? (
+              <TextField
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                fullWidth
+              />
+            ) : (
+              creation.creationName
+            )}
+          </Typography>
         </Box>
+        <Typography variant="body1">
+          Description:{" "}
+          {editable ? (
+            <TextField
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              fullWidth
+            />
+          ) : (
+            creation.creationDescription
+          )}
+        </Typography>
+        <Box
+          sx={{
+            backgroundColor: "primary.main",
+            p: 1,
+            mt: 2,
+            mb: 2,
+            borderRadius: 2,
+          }}
+        >
+          <Typography variant="body1" color="text.secondary">
+            Key Code
+          </Typography>
+          <Typography variant="body1" fontSize="1.6rem" color="text.secondary">
+            {creation.keyCode}
+          </Typography>
+        </Box>
+        <Typography variant="body1" color="text.primary">
+          {" "}
+          <Button
+            variant="contained"
+            color={encrypted ? "success" : "error"}
+            onClick={() => setEncrypted(!encrypted)}
+          >
+            {encrypted ? "Encrypted" : "Unencrypted"}
+          </Button>
+        </Typography>
+        <Box alignContent={"center"} justifyContent={"center"}>
+          {editable ? (
+            <>
+              <Button
+                variant="outlined"
+                fullWidth
+                onClick={handleCancelEdit}
+                sx={{ mt: 2, mb: 1 }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                fullWidth
+                onClick={handleSave}
+              >
+                Save
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="outlined"
+                fullWidth
+                startIcon={<EditIcon />}
+                onClick={handleEditClick}
+                sx={{ mt: 2, mb: 1 }}
+              >
+                Edit
+              </Button>
+              <Button
+                variant="outlined"
+                fullWidth
+                onClick={() => setShowConfirmDialog(true)}
+                startIcon={<DeleteIcon />}
+              >
+                Delete
+              </Button>
+            </>
+          )}
+        </Box>
+      </Box>
       <Dialog
         open={showConfirmDialog}
         onClose={() => setShowConfirmDialog(false)}
@@ -119,7 +177,7 @@ const Creation = ({ creation }) => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </>
   );
 };
 
