@@ -1,9 +1,18 @@
 "use client";
 import getUser from "@/utils/getUser";
 import { Box, Button, Grid, Link, Typography } from "@mui/material"
+import { useRouter } from "next/navigation";
+
 
 function HomeMenu() {
   const user = getUser();
+  const router = useRouter();
+
+  const handleGoToCreations = () => {
+    setTimeout(() => {
+      router.push("/creations/all/" + user);
+    }, 100);}
+
   return (
     <>
     <Box sx={{textAlign: "center", mt: 5}}>
@@ -16,11 +25,11 @@ function HomeMenu() {
         <Typography variant="h3">Check our options! 🫡</Typography>
             </Grid> 
             <Grid item xs={12}>
-                <Link href={"/creations/all/" + user}>
-                <Button variant="contained">
+                <Button variant="contained" onClick={() => {
+                  handleGoToCreations();
+                }}>
                 <Typography fontSize={"large"}> My Creations </Typography>
                 </Button>
-                </Link>
             </Grid>
             <Grid item xs={12}>
                 <Link href="/creations/newcreation">

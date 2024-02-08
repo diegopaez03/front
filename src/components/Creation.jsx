@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import PropTypes from "prop-types";
 import {
   Box,
@@ -10,17 +11,24 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  Switch,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import axios from "axios";
+import getUser from "@/utils/getUser";
+import loginRedirect from "@/utils/redirect";
 
 const Creation = ({ creation }) => {
+  loginRedirect();
+  const router = useRouter();
+
   const [editable, setEditable] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [name, setName] = useState(creation.creationName);
   const [description, setDescription] = useState(creation.creationDescription);
   const [encrypted, setEncrypted] = useState(creation.encrypted);
+
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleEditClick = () => {
     setEditable(true);
@@ -33,8 +41,32 @@ const Creation = ({ creation }) => {
     setEditable(false);
   };
 
-  const handleSave = () => {
-    // Aquí puedes implementar la lógica para guardar los cambios utilizando una petición PATCH con axios
+  const handleSave = async (event) => {
+    event.preventDefault();
+    console.log("id de la creacion: " + creation.creationId);
+
+    try {
+      const dataToSend = {
+        creationName: name,
+        creationDescription: description,
+        encrypted: encrypted,
+      };
+
+      const response = await axios.patch(
+        `http://localhost:4000/creation/${creation.creationId}`,
+        dataToSend
+      );
+      console.log(dataToSend);
+      console.log(response);
+      if (response.data.message) {
+        setErrorMessage(response.data.message);
+      } else {
+        // Recargar pagina
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
     setEditable(false);
   };
 
@@ -64,32 +96,34 @@ const Creation = ({ creation }) => {
             p: 1,
             mb: 1,
             borderRadius: 2,
+            color: "text.secondary",
+            typography: "h4",
           }}
         >
-          <Typography variant="h5" color="text.secondary">
-            {editable ? (
-              <TextField
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                fullWidth
-              />
-            ) : (
-              creation.creationName
-            )}
-          </Typography>
-        </Box>
-        <Typography variant="body1">
-          Description:{" "}
           {editable ? (
             <TextField
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               fullWidth
             />
           ) : (
-            creation.creationDescription
+            creation.creationName
           )}
+        </Box>
+        <Typography variant="h6">
+        Description:{" "}
         </Typography>
+        {editable ? (
+          <TextField
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            fullWidth
+          />
+        ) : (
+          <Typography variant="body1">
+            {creation.creationDescription}
+          </Typography>
+        )}
         <Box
           sx={{
             backgroundColor: "primary.main",
@@ -108,13 +142,19 @@ const Creation = ({ creation }) => {
         </Box>
         <Typography variant="body1" color="text.primary">
           {" "}
-          <Button
-            variant="contained"
-            color={encrypted ? "success" : "error"}
-            onClick={() => setEncrypted(!encrypted)}
-          >
-            {encrypted ? "Encrypted" : "Unencrypted"}
-          </Button>
+          {editable ? (
+            <Button
+              variant="contained"
+              color={encrypted ? "success" : "error"}
+              onClick={() => setEncrypted(!encrypted)}
+            >
+              {encrypted ? "Encrypted" : "Unencrypted"}
+            </Button>
+          ) : (
+            <Button variant="contained" color={encrypted ? "success" : "error"}>
+              {encrypted ? "Encrypted" : "Unencrypted"}
+            </Button>
+          )}
         </Typography>
         <Box alignContent={"center"} justifyContent={"center"}>
           {editable ? (
@@ -127,11 +167,7 @@ const Creation = ({ creation }) => {
               >
                 Cancel
               </Button>
-              <Button
-                variant="contained"
-                fullWidth
-                onClick={handleSave}
-              >
+              <Button variant="contained" fullWidth onClick={handleSave}>
                 Save
               </Button>
             </>

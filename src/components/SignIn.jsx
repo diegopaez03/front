@@ -34,7 +34,7 @@ export default function SignIn() {
         router.push("/");
         setTimeout(() => {
           window.location.reload();
-        }, 1000);
+        }, 200);
       }
     } catch (error) {
       console.error("Error:", error);

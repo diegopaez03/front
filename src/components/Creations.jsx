@@ -4,14 +4,24 @@ import loginRedirect from "@/utils/redirect";
 import {
   Avatar,
   Box,
+  Button,
   Card,
   CardContent,
   Link,
   Typography,
 } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 function Creations({ creations }) {
   loginRedirect();
+
+  const router = useRouter();
+
+  const handleGoToCreation = (creation) => {
+    setTimeout(() => {
+      router.push(`/creations/all/${getUser()}/${creation.creationId}`);
+    }, 100);
+  };
 
   // Ordenar las creaciones de forma decreciente
   const sortedCreations = creations.sort((a, b) => b.creationId - a.creationId);
@@ -25,11 +35,9 @@ function Creations({ creations }) {
           sx={{ display: "flex" }}
           style={{ marginBottom: "10px", backgroundColor: "primary" }}
         >
-          <Link
-            href={`/creations/all/${getUser()}/${creation.creationId}`}
-            color="text.primary"
-            underline="none"
-          >
+          <Button onClick={() => {
+            handleGoToCreation(creation);
+          }}>
             <CardContent key={creation.creationId} sx={{ display: "flex" }}>
               <Avatar
                 sx={{
@@ -42,7 +50,7 @@ function Creations({ creations }) {
               >
                 {creation.creationId}
               </Avatar>
-              <Box>
+              <Box textAlign={"start"}>
                 <Typography variant="h4" component="div" mb={1}>
                   {creation.creationName}
                 </Typography>
@@ -51,7 +59,7 @@ function Creations({ creations }) {
                 </Typography>
               </Box>
             </CardContent>
-          </Link>
+          </Button>
         </Card>
       ))}
     </div>

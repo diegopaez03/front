@@ -38,7 +38,9 @@ export default function SignUp() {
         setErrorMessage(response.data.message);
       }
       if (response.data.message === "Scientist created successfully"){
-        router.push("/join/login")
+        setTimeout(() => {
+          router.push("/join/login")
+        }, 100);
       }
     } catch (error) {
       console.error("Error:", error);

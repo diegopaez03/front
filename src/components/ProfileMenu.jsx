@@ -30,7 +30,7 @@ const AccountCircleButton = () => {
     setAnchorEl(null);
     setTimeout(() => {
       window.location.reload();
-    }, 1000);
+    }, 500);
   };
 
   return (

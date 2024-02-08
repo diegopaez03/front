@@ -50,7 +50,10 @@ export default function NewCreation() {
         setErrorMessage(response.data.message);
       } else {
         // Redirigir a la página de creations/all/{username}
-        router.push(`/creations/all/${getUser()}`);
+        router.push("/creations/all/" + getUser());
+        setTimeout(() => {
+          window.location.reload()
+        }, 500);
       }
     } catch (error) {
       console.error("Error:", error);
