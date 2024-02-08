@@ -70,9 +70,23 @@ const Creation = ({ creation }) => {
     setEditable(false);
   };
 
-  const handleConfirmDelete = () => {
-    // Lógica para eliminar
-    setShowConfirmDialog(false);
+  const handleConfirmDelete = async () => {
+    try {
+      const response = await axios.delete(`http://localhost:4000/creation/${creation.creationId}`);
+      if (response.data.message) {
+        setErrorMessage(response.data.message)
+      } else{
+        setShowConfirmDialog(false);
+        // Redirigir a la página de creations/all/{username}
+        router.push("/creations/all/" + getUser());
+        setTimeout(() => {
+          window.location.reload()
+        }, 500);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+
   };
 
   const handleCancelDelete = () => {
@@ -205,10 +219,10 @@ const Creation = ({ creation }) => {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancelDelete} color="primary">
+          <Button onClick={handleCancelDelete} color="primary" variant="contained">
             Cancel
           </Button>
-          <Button onClick={handleConfirmDelete} color="error">
+          <Button onClick={handleConfirmDelete} color="error" variant="contained">
             Delete
           </Button>
         </DialogActions>
